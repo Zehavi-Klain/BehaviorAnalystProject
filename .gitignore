@@ -1,0 +1,27 @@
+# קבצי בינארי
+bin/
+obj/
+*.exe
+*.dll
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.ncb
+*.pdb
+*.opendb
+*.VC.db
+*.VC.opendb
+
+# חבילות NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Entity Framework Migrations
+Migrations/
+
+# סודות וקבצים פרטיים
+secrets.json
+appsettings.Development.json
