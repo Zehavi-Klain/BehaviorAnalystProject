@@ -10,7 +10,7 @@ namespace Repository.Entities
     public class FormCategory
     {
         [Key]
-        public string Code { get; set; }
+        public int Code { get; set; }
         public string CategoryName { get; set; }
     }
 }
