@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-        public class CommentRepository : IRepository<Comment>
+        public class CommentRepository : IRepository<Comment,int>
         {
             private readonly IContext context;
 

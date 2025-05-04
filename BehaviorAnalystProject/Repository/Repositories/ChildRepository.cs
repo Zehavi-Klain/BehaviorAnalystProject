@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class ChildRepository:IRepository<Child>
+    public class ChildRepository:IRepository<Child,string>
     {
         private readonly IContext context;
 
@@ -24,7 +24,7 @@ namespace Repository.Repositories
             return item;
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             this.context.Child.Remove(GetById(id));
             context.Save();
@@ -35,12 +35,12 @@ namespace Repository.Repositories
             return this.context.Child.ToList();
         }
 
-        public Child GetById(int id)
+        public Child GetById(string id)
         {
             return this.context.Child.FirstOrDefault(x => x.Id.Equals(id));
         }
 
-        public void UpdateItem(int id, Child item)
+        public void UpdateItem(string id, Child item)
         {
             var child = GetById(id);
             child.Email = item.Email;

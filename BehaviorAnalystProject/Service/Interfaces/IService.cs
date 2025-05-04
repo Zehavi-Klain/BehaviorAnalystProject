@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Interfaces
+
+namespace Service.Interfaces
 {
-    public interface IRepository<T,Tkey>
+    public interface IService<T,TKey>
     {
-        T GetById(Tkey id);
+        T GetById(TKey id);
         List<T> GetAll();
-        void Delete(Tkey id);
+        void Delete(TKey id);
         T AddItem(T item);
-        void UpdateItem(Tkey id,T item);
+        void UpdateItem(TKey id, T item);
 
     }
 }
+
