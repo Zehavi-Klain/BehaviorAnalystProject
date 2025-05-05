@@ -23,6 +23,7 @@ namespace Repository.Entities
         public string ChildsDisability { get; set; }//לקות הילד
         public string FamilyPosition { get; set; }//מיקום במשפחה
         public string EducationalInstitution { get; set; }//מוסד לימודים
+        public bool IsActive { get; set; } = true;//האם משתמש פעיל או לא
         public virtual ICollection<Form> ChildForms { get; set; } 
         public virtual ICollection<LessonSummary> ChildLessonsSumery { get; set; } 
         public virtual ICollection<Comment> ChildComments { get; set; } 
