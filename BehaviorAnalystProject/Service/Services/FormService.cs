@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class FormService : IService<FormDto, int>
+    public class FormService : IService<FormDto>
     {
-        private readonly IRepository<Form, int> Repositery;
+        private readonly IRepository<Form> Repositery;
         private readonly IMapper mapper;
 
-        public FormService(IRepository<Form, int> repositery, IMapper mapper)
+        public FormService(IRepository<Form> repositery, IMapper mapper)
         {
             Repositery = repositery;
             this.mapper = mapper;

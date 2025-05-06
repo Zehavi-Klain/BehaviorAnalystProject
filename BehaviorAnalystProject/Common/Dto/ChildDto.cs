@@ -12,6 +12,7 @@ namespace Common.Dto
     public class ChildDto
     {
         [Key]
+        public int Code { get; set; }
         public string Id { get; set; }
         public string Fname { get; set; }
         public string Lname { get; set; }
@@ -29,7 +30,7 @@ namespace Common.Dto
 
         // Foreign Key for Analyst
 
-        public string AnalystId { get; set; }
+        public int AnalystId { get; set; }
         [ForeignKey("AnalystId")]
         public Analyst Analyst { get; set; }
     }

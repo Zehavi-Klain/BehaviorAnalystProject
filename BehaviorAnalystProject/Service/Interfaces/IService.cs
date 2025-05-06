@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IService<T,TKey>
+    public interface IService<T>
     {
-        T GetById(TKey id);
+        T GetById(int id);
         List<T> GetAll();
-        void Delete(TKey id);
+        void Delete(int id);
         T AddItem(T item);
-        void UpdateItem(TKey id, T item);
+        void UpdateItem(int id, T item);
 
     }
 }

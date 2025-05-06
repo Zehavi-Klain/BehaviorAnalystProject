@@ -13,12 +13,12 @@ using AutoMapper;
 
 namespace Service.Services
 {
-    public class AnalystService : IService<AnalystDto,string>
+    public class AnalystService : IService<AnalystDto>
     {
-        private readonly IRepository<Analyst,string> Repositery;
+        private readonly IRepository<Analyst> Repositery;
         private readonly IMapper mapper;
 
-        public AnalystService(IRepository<Analyst,string> repositery, IMapper mapper)
+        public AnalystService(IRepository<Analyst> repositery, IMapper mapper)
         {
             Repositery = repositery;
             this.mapper = mapper;
@@ -29,7 +29,7 @@ namespace Service.Services
             return mapper.Map<Analyst, AnalystDto>(Repositery.AddItem(mapper.Map<AnalystDto, Analyst>(item)));
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             Repositery.Delete(id);
         }
@@ -39,12 +39,12 @@ namespace Service.Services
             return mapper.Map<List<Analyst>,List<AnalystDto>>(Repositery.GetAll());
         }
 
-        public AnalystDto GetById(string id)
+        public AnalystDto GetById(int id)
         {
             return mapper.Map<Analyst,AnalystDto>(Repositery.GetById(id));
         }
 
-        public void UpdateItem(string id, AnalystDto item)
+        public void UpdateItem(int id, AnalystDto item)
         {
             Repositery.UpdateItem(id,mapper.Map<AnalystDto,Analyst>(item));
         }

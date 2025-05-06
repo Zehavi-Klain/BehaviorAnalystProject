@@ -10,6 +10,7 @@ namespace Repository.Entities
     public class Analyst
     {
         [Key]
+        public int Code { get; set; }
         public string Id { get; set; }
         public string Fname { get; set; }
         public string Lname { get; set; }

@@ -11,6 +11,7 @@ namespace Common.Dto
     public class AnalystDto
     {
         [Key]
+        public int Code { get; set; }
         public string Id { get; set; }
         public string Fname { get; set; }
         public string Lname { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class LessonSummaryRepository : IRepository<LessonSummary, int>
+    public class LessonSummaryRepository : IRepository<LessonSummary>
     {
         private readonly IContext context;
 

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
-    public interface IRepository<T,Tkey>
+    public interface IRepository<T>
     {
-        T GetById(Tkey id);
+        T GetById(int id);
         List<T> GetAll();
-        void Delete(Tkey id);
+        void Delete(int id);
         T AddItem(T item);
-        void UpdateItem(Tkey id,T item);
+        void UpdateItem(int id,T item);
 
     }
 }

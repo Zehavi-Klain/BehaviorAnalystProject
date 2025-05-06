@@ -21,10 +21,10 @@ namespace Common.Dto
         public string FileName { get; set; }
 
         // Foreign Key for FormCategory
-        public string? ChildID { get; set; }
+        public int? ChildID { get; set; }
         [ForeignKey("ChildID")]
         public Child Child { get; set; }
-        public string? AnalystID { get; set; }
+        public int? AnalystID { get; set; }
         [ForeignKey("AnalystID")]
         public Analyst Analyst { get; set; }
 
