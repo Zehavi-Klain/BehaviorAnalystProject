@@ -16,7 +16,7 @@ namespace Common.Dto
         public string Fname { get; set; }
         public string Lname { get; set; }
         public string Email { get; set; }
-        public virtual ICollection<ChildDto> Children { get; set; }
-        public virtual ICollection<FormDto> Forms { get; set; }
+        public virtual ICollection<ChildDto>? Children { get; set; }
+        public virtual ICollection<FormDto>? Forms { get; set; }
     }
 }
