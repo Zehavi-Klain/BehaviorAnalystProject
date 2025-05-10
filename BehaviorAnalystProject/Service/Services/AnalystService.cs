@@ -24,10 +24,18 @@ namespace Service.Services
             this.mapper = mapper;
         }
 
+        //public AnalystDto AddItem(AnalystDto item)
+        //{
+        //    return mapper.Map<Analyst, AnalystDto>(Repositery.AddItem(mapper.Map<AnalystDto, Analyst>(item)));
+        //}
         public AnalystDto AddItem(AnalystDto item)
         {
-            return mapper.Map<Analyst, AnalystDto>(Repositery.AddItem(mapper.Map<AnalystDto, Analyst>(item)));
+            var mapper = new MyMapper();
+            Analyst entity = mapper.Map<AnalystDto, Analyst>(item);
+            Analyst added = Repositery.AddItem(entity);
+            return mapper.Map<Analyst, AnalystDto>(added);
         }
+
 
         public void Delete(int id)
         {
