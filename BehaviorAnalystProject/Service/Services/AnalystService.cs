@@ -24,9 +24,20 @@ namespace Service.Services
             this.mapper = mapper;
         }
 
+        //public AnalystDto AddItem(AnalystDto item)
+        //{
+        //    return mapper.Map<Analyst, AnalystDto>(Repositery.AddItem(mapper.Map<AnalystDto, Analyst>(item)));
+        //}
         public AnalystDto AddItem(AnalystDto item)
         {
-            return mapper.Map<Analyst, AnalystDto>(Repositery.AddItem(mapper.Map<AnalystDto, Analyst>(item)));
+            // מיפוי מה-DTO לאובייקט Analyst
+            var analyst = mapper.Map<AnalystDto, Analyst>(item);
+
+            // הוספת ה-Analyst למאגר
+            var addedAnalyst = Repositery.AddItem(analyst);
+
+            // מיפוי מחדש מ-Analyst ל-AnalystDto כדי להחזיר את ה-DTO
+            return mapper.Map<Analyst, AnalystDto>(addedAnalyst);
         }
 
         public void Delete(int id)

@@ -23,8 +23,7 @@ namespace Service.Services
                     .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(src => src.fileImage.FileName));
 
                 // analyst
-                cfg.CreateMap<AnalystDto, Analyst>();
-                cfg.CreateMap<Analyst, AnalystDto>();
+                cfg.CreateMap<AnalystDto, Analyst>().ReverseMap();
 
                 // child
                 cfg.CreateMap<Child, ChildDto>().ReverseMap();
