@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Repository.Entities;
+using Service.Interfaces;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,7 +12,14 @@ namespace BehaviorAnalystProject.Controllers
     [ApiController]
     public class AnalystController : ControllerBase
     {
-   //     private readonly IService<>
+        private readonly IService<AnalystDto> service;
+
+        public AnalystController(IService<AnalystDto> service)
+        {
+            this.service = service;
+        }
+
+        //     private readonly IService<>
         // GET: api/<AnalystController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -23,12 +33,14 @@ namespace BehaviorAnalystProject.Controllers
         {
             return "value";
         }
-        
+
 
         // POST api/<AnalystController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public AnalystDto Post([FromBody] AnalystDto analyst)
         {
+            return service.AddItem(analyst);
+
         }
 
         // PUT api/<AnalystController>/5
