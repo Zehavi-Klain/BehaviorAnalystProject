@@ -15,7 +15,7 @@ namespace Repository.Entities
         public string Fname { get; set; }
         public string Lname { get; set; }
         public string Email { get; set; }
-        public virtual ICollection<Child> Children { get; set; }
-        public virtual ICollection<Form> Forms { get; set; }
+        public virtual ICollection<Child>? Children { get; set; }
+        public virtual ICollection<Form>? Forms { get; set; }
     }
 }
