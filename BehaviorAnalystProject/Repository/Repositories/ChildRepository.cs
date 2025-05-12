@@ -37,7 +37,7 @@ namespace Repository.Repositories
 
         public Child GetById(int id)
         {
-            return this.context.Child.FirstOrDefault(x => x.Id.Equals(id));
+            return this.context.Child.FirstOrDefault(x => x.Code==id);
         }
 
         public void UpdateItem(int id, Child item)

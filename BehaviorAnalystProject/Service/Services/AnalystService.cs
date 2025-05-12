@@ -17,6 +17,7 @@ namespace Service.Services
     {
         private readonly IRepository<Analyst> Repositery;
         private readonly IMapper mapper;
+        private readonly MyMapper _mapper = new MyMapper();
 
         public AnalystService(IRepository<Analyst> repositery, IMapper mapper)
         {
@@ -30,10 +31,10 @@ namespace Service.Services
         //}
         public AnalystDto AddItem(AnalystDto item)
         {
-            var mapper = new MyMapper();
-            Analyst entity = mapper.Map<AnalystDto, Analyst>(item);
+            //var mapper = new MyMapper();
+            Analyst entity = _mapper.Map<AnalystDto, Analyst>(item);
             Analyst added = Repositery.AddItem(entity);
-            return mapper.Map<Analyst, AnalystDto>(added);
+            return _mapper.Map<Analyst, AnalystDto>(added);
         }
 
 
@@ -44,17 +45,17 @@ namespace Service.Services
 
         public List<AnalystDto> GetAll()
         {
-            return mapper.Map<List<Analyst>,List<AnalystDto>>(Repositery.GetAll());
+            return _mapper.Map<List<Analyst>,List<AnalystDto>>(Repositery.GetAll());
         }
 
         public AnalystDto GetById(int id)
         {
-            return mapper.Map<Analyst,AnalystDto>(Repositery.GetById(id));
+            return _mapper.Map<Analyst,AnalystDto>(Repositery.GetById(id));
         }
 
         public void UpdateItem(int id, AnalystDto item)
         {
-            Repositery.UpdateItem(id,mapper.Map<AnalystDto,Analyst>(item));
+            Repositery.UpdateItem(id,_mapper.Map<AnalystDto,Analyst>(item));
         }
     }
 }

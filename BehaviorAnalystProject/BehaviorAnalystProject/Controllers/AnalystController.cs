@@ -22,16 +22,16 @@ namespace BehaviorAnalystProject.Controllers
         //     private readonly IService<>
         // GET: api/<AnalystController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<AnalystDto> Get()
         {
-            return new string[] { "value1", "value2" };
+            return service.GetAll();
         }
 
         // GET api/<AnalystController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public AnalystDto Get(int id)
         {
-            return "value";
+            return service.GetById(id);
         }
 
 
@@ -45,14 +45,16 @@ namespace BehaviorAnalystProject.Controllers
 
         // PUT api/<AnalystController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] AnalystDto analyst)
         {
+            service.UpdateItem(id, analyst);
         }
 
         // DELETE api/<AnalystController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            service.Delete(id);
         }
     }
 }

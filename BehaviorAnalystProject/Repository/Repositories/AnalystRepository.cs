@@ -37,7 +37,7 @@ namespace Repository.Repositories
 
         public Analyst GetById(int id)
         {
-            return this.context.Analyst.FirstOrDefault(x => x.Id.Equals(id));
+            return this.context.Analyst.FirstOrDefault(x => x.Code==id);
         }
 
         public void UpdateItem(int id, Analyst item)

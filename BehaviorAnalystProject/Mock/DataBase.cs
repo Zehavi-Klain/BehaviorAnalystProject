@@ -36,6 +36,7 @@ using Repository.Interfaces;
 
 public class DataBase : DbContext, IContext
 {
+
     public DataBase(DbContextOptions<DataBase> options) : base(options)
     {
     }
