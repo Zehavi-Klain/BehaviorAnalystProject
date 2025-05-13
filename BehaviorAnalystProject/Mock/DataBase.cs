@@ -48,6 +48,7 @@ public class DataBase : DbContext, IContext
     public DbSet<LessonSummary> LessonSummary { get; set; }
     public DbSet<Form> Form { get; set; }
 
+
     public void Save()
     {
         SaveChanges();

@@ -15,6 +15,7 @@ namespace Service.Services
     {
         private readonly IRepository<Child> Repositery;
         private readonly IMapper mapper;
+        private readonly MyMapper _mapper=new MyMapper();
 
         public ChildService(IRepository<Child> repositery, IMapper mapper)
         {
@@ -24,7 +25,9 @@ namespace Service.Services
 
         public ChildDto AddItem(ChildDto item)
         {
-            return mapper.Map<Child, ChildDto>(Repositery.AddItem(mapper.Map<ChildDto, Child>(item)));
+            var child = _mapper.Map<ChildDto, Child>(item);
+            var result = Repositery.AddItem(child);
+            return _mapper.Map<Child, ChildDto>(result);
         }
         public void Delete(int id)
         {
@@ -33,17 +36,17 @@ namespace Service.Services
 
         public List<ChildDto> GetAll()
         {
-            return mapper.Map<List<Child>, List<ChildDto>>(Repositery.GetAll());
+            return _mapper.Map<List<Child>, List<ChildDto>>(Repositery.GetAll());
         }
 
         public ChildDto GetById(int id)
         {
-            return mapper.Map<Child, ChildDto>(Repositery.GetById(id));
+            return _mapper.Map<Child, ChildDto>(Repositery.GetById(id));
         }
 
         public void UpdateItem(int id, ChildDto item)
         {
-            Repositery.UpdateItem(id, mapper.Map<ChildDto, Child>(item));
+            Repositery.UpdateItem(id, _mapper.Map<ChildDto, Child>(item));
         }
 
     }

@@ -16,8 +16,8 @@ namespace Repository.Entities
         public DateTime Date { get; set; }
 
         // קשר עם ילד (כל הערה משויכת לילד מסוים)
-        public int ChildID { get; set; }
-        [ForeignKey("ChildID")]
+        public int ChildCode { get; set; }
+        [ForeignKey("ChildCode")]
         public Child child { get; set; }
     }
 }
