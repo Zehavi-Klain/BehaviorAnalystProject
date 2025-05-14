@@ -3,51 +3,128 @@ using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Service.Services;
+using System.Net.Mail;
 
-namespace Service.Services
+public class ChildService : IService<ChildDto>
 {
-    public class ChildService : IService<ChildDto>
+    private readonly IRepository<Child> Repositery;
+    private readonly IMapper mapper;
+    private readonly MyMapper _mapper = new MyMapper();
+
+    public ChildService(IRepository<Child> repositery, IMapper mapper)
     {
-        private readonly IRepository<Child> Repositery;
-        private readonly IMapper mapper;
-        private readonly MyMapper _mapper=new MyMapper();
+        Repositery = repositery;
+        this.mapper = mapper;
+    }
 
-        public ChildService(IRepository<Child> repositery, IMapper mapper)
+    public ChildDto AddItem(ChildDto item)
+    {
+        try
         {
-            Repositery = repositery;
-            this.mapper = mapper;
-        }
+            // בדיקת תקינות הקלט
+            ValidateChildDto(item);
 
-        public ChildDto AddItem(ChildDto item)
-        {
             var child = _mapper.Map<ChildDto, Child>(item);
             var result = Repositery.AddItem(child);
             return _mapper.Map<Child, ChildDto>(result);
         }
-        public void Delete(int id)
+        catch (ArgumentException ex)
         {
-            Repositery.Delete(id);
+            throw new ArgumentException($"שגיאה בנתונים: {ex.Message}");
         }
-
-        public List<ChildDto> GetAll()
+        catch (Exception ex)
         {
-            return _mapper.Map<List<Child>, List<ChildDto>>(Repositery.GetAll());
+            throw new Exception($"שגיאה בלתי צפויה: {ex.Message}");
         }
+    }
 
-        public ChildDto GetById(int id)
-        {
-            return _mapper.Map<Child, ChildDto>(Repositery.GetById(id));
-        }
+    public void Delete(int id)
+    {
+        if (id <= 0)
+            throw new ArgumentException("ID לא תקין");
 
-        public void UpdateItem(int id, ChildDto item)
+        var existing = Repositery.GetById(id);
+        if (existing == null)
+            throw new KeyNotFoundException($"לא נמצא ילד עם מזהה {id}");
+
+        Repositery.Delete(id);
+    }
+
+    public List<ChildDto> GetAll()
+    {
+        return _mapper.Map<List<Child>, List<ChildDto>>(Repositery.GetAll());
+    }
+
+    public ChildDto GetById(int id)
+    {
+        if (id <= 0)
+            throw new ArgumentException("ID לא תקין");
+
+        var child = Repositery.GetById(id);
+        if (child == null)
+            throw new KeyNotFoundException($"לא נמצא ילד עם מזהה {id}");
+
+        return _mapper.Map<Child, ChildDto>(child);
+    }
+
+    public void UpdateItem(int id, ChildDto item)
+    {
+        try
         {
+            if (id <= 0)
+                throw new ArgumentException("ID לא תקין");
+
+            ValidateChildDto(item);
+
+            var existing = Repositery.GetById(id);
+            if (existing == null)
+                throw new KeyNotFoundException($"לא נמצא ילד עם מזהה {id}");
+
             Repositery.UpdateItem(id, _mapper.Map<ChildDto, Child>(item));
         }
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException($"שגיאה בנתונים: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"שגיאה בלתי צפויה: {ex.Message}");
+        }
+    }
 
+    // ---------- בדיקות תקינות ----------
+    private void ValidateChildDto(ChildDto item)
+    {
+        if (item == null)
+            throw new ArgumentNullException(nameof(item), "לא ניתן לעבד פריט null.");
+
+        if (string.IsNullOrWhiteSpace(item.Id))
+            throw new ArgumentException("ID נדרש.");
+
+        if (string.IsNullOrWhiteSpace(item.Fname))
+            throw new ArgumentException("שם פרטי נדרש.");
+
+        if (string.IsNullOrWhiteSpace(item.Lname))
+            throw new ArgumentException("שם משפחה נדרש.");
+
+        if (string.IsNullOrWhiteSpace(item.Email))
+            throw new ArgumentException("אימייל נדרש.");
+
+        if (!IsValidEmail(item.Email))
+            throw new ArgumentException("כתובת אימייל לא תקינה.");
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

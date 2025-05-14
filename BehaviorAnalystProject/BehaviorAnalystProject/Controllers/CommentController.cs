@@ -1,6 +1,7 @@
 ﻿using Common.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
+using Repository.Interfaces;
 using Service.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace BehaviorAnalystProject.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+
         private readonly IService<Comment> service;
         public CommentController(IService<Comment> service)
         {
