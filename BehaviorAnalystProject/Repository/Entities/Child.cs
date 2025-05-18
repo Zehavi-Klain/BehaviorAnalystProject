@@ -31,8 +31,8 @@ namespace Repository.Entities
 
         // Foreign Key for Analyst
         
-        public int AnalystId { get; set; }
-        [ForeignKey("AnalystId")]
+        public int AnalystCode { get; set; }
+        [ForeignKey("AnalystCode")]
         public Analyst Analyst { get; set; }
     }
 }

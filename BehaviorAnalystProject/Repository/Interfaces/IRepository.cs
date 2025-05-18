@@ -12,7 +12,7 @@ namespace Repository.Interfaces
         List<T> GetAll();
         void Delete(int id);
         T AddItem(T item);
-        void UpdateItem(int id,T item);
+        T UpdateItem(int id,T item);
 
     }
 }

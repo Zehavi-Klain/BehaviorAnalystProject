@@ -1,43 +1,103 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Common.Dto;
+using Service.Services;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace BehaviorAnalystProject.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class ChildController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ChildController : ControllerBase
+    private readonly IService<ChildDto> _childService;
+
+    public ChildController(IService<ChildDto> childService)
     {
-        // GET: api/<ChildController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        _childService = childService;
+    }
 
-        // GET api/<ChildController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+    [HttpGet]
+    public ActionResult<List<ChildDto>> GetAll()
+    {
+        return Ok(_childService.GetAll());
+    }
 
-        // POST api/<ChildController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+    [HttpGet("{id}")]
+    public ActionResult<ChildDto> GetById(int id)
+    {
+        try
         {
+            return Ok(_childService.GetById(id));
         }
-
-        // PUT api/<ChildController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        catch (Exception ex)
         {
+            return NotFound(ex.Message);
         }
+    }
 
-        // DELETE api/<ChildController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+    [HttpPost]
+    public ActionResult<ChildDto> Add([FromBody] ChildDto item)
+    {
+        try
         {
+            var added = _childService.AddItem(item);
+            return CreatedAtAction(nameof(GetById), new { id = added.Id }, added);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<ChildDto> Update(int id, [FromBody] ChildDto item)
+    {
+        try
+        {
+            return Ok(_childService.UpdateItem(id, item));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        try
+        {
+            _childService.Delete(id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}/comments")]
+    public ActionResult<List<CommentDto>> GetComments(int id)
+    {
+        try
+        {
+            var comments = _childService.GetChildComments(id);
+            return Ok(comments);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}/forms")]
+    public ActionResult<List<FormDto>> GetForms(int id)
+    {
+        try
+        {
+            var forms = _childService.GetChildForms(id);
+            return Ok(forms);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
