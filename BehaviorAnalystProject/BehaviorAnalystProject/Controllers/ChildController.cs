@@ -86,6 +86,19 @@ public class ChildController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    [HttpGet("{id}/lessonSummery")]
+    public ActionResult<List<LessonSummaryDto>> GetLessonSummery(int id)
+    {
+        try
+        {
+            var summaries = _childService.GetLessonSummery(id);
+            return Ok(summaries);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     [HttpGet("{id}/forms")]
     public ActionResult<List<FormDto>> GetForms(int id)
@@ -100,4 +113,5 @@ public class ChildController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
 }

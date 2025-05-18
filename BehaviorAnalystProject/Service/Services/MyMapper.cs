@@ -31,8 +31,13 @@ namespace Service.Services
                 .ForMember(dest => dest.AnalystId, opt => opt.MapFrom(src => src.AnalystCode));
 
             CreateMap<ChildDto, Child>()
+
                 .ForMember(dest => dest.AnalystCode, opt => opt.MapFrom(src => src.AnalystId))
                 .ForMember(dest => dest.Analyst, opt => opt.Ignore()); // חשוב! לא לגעת ב-Analyst עצמו
+
+            // lesson summary
+            CreateMap<LessonSummary, LessonSummaryDto>().ReverseMap();
+
         }
 
     }

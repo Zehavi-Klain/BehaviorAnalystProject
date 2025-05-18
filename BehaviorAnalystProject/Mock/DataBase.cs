@@ -1,11 +1,9 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Repository.Entities;
 using Repository.Interfaces;
 
 public class DataBase : DbContext, IContext
 {
-
     public DataBase(DbContextOptions<DataBase> options) : base(options)
     {
     }
@@ -17,6 +15,10 @@ public class DataBase : DbContext, IContext
     public DbSet<LessonSummary> LessonSummary { get; set; }
     public DbSet<Form> Form { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+    }
 
     public void Save()
     {

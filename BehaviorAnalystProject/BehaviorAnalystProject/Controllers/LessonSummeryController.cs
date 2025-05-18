@@ -1,43 +1,115 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Service.Services; // או כל namespace שבו נמצא ה־LessonSummaryService
+using System;
+using System.Collections.Generic;
 
 namespace BehaviorAnalystProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LessonSummeryController : ControllerBase
+    public class LessonSummaryController : ControllerBase
     {
-        // GET: api/<LessonSummeryController>
+        private readonly IService<LessonSummaryDto> service;
+
+        public LessonSummaryController(IService<LessonSummaryDto> service)
+        {
+            this.service = service;
+        }
+
+        // GET: api/LessonSummary
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<LessonSummaryDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var list = service.GetAll();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
-        // GET api/<LessonSummeryController>/5
+        // GET api/LessonSummary/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<LessonSummaryDto> Get(int id)
         {
-            return "value";
+            try
+            {
+                var summary = service.GetById(id);
+                return Ok(summary);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
-        // POST api/<LessonSummeryController>
+        // POST api/LessonSummary
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<LessonSummaryDto> Post([FromBody] LessonSummaryDto item)
         {
+            try
+            {
+                var created = service.AddItem(item);
+                return CreatedAtAction(nameof(Get), new { id = created.ID }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
-        // PUT api/<LessonSummeryController>/5
+        // PUT api/LessonSummary/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, [FromBody] LessonSummaryDto item)
         {
+            try
+            {
+                service.UpdateItem(id, item);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
-        // DELETE api/<LessonSummeryController>/5
+        // DELETE api/LessonSummary/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            try
+            {
+                service.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
     }
 }

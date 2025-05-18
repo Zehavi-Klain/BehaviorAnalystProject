@@ -2,6 +2,7 @@
 using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
+using Repository.Repositories;
 using Service.Services;
 using System.Net.Mail;
 
@@ -91,6 +92,16 @@ public class ChildService : IService<ChildDto>
         }
         return item;
     }
+
+    public List<FormDto> GetChildForms(int id)
+    {
+        var child = Repositery.GetById(id);
+        if (child == null)
+            throw new ArgumentException($"Child with code {id} does not exist.");
+
+        var commentEntities = child.ChildForms ?? new List<Form>();
+        return _mapper.Map<List<Form>, List<FormDto>>(child.ChildForms.ToList());
+    }
     public List<CommentDto> GetChildComments(int id)
     {
         var child = Repositery.GetById(id);
@@ -102,13 +113,19 @@ public class ChildService : IService<ChildDto>
         return comments;
     }
 
-    public List<FormDto> GetChildForms(int id)
+    public List<LessonSummaryDto> GetLessonSummery(int id)
     {
         var child = Repositery.GetById(id);
         if (child == null)
             throw new ArgumentException($"Child with code {id} does not exist.");
-        return _mapper.Map<List<Form>, List<FormDto>>(child.ChildForms.ToList());
+
+        var commentEntities = child.ChildLessonsSumery ?? new List<LessonSummary>();
+        var summaries = _mapper.Map<List<LessonSummary>, List<LessonSummaryDto>>(commentEntities.ToList());
+        return summaries;
     }
+    #region בדיקות תקינות
+
+
 
     // ---------- בדיקות תקינות ----------
     private void ValidateChildDto(ChildDto item)
@@ -145,3 +162,4 @@ public class ChildService : IService<ChildDto>
         }
     }
 }
+#endregion

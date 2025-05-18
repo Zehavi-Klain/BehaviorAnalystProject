@@ -11,7 +11,6 @@ namespace Service.Services
     public class CommentService : IService<CommentDto>
     {
         private readonly IRepository<Comment> repository;
-       // private readonly IMapper mapper;
         private readonly IRepository<Child> childRepository;
         private readonly IMapper mapper;
 

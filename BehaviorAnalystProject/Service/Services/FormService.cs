@@ -76,7 +76,7 @@ namespace Service.Services
                 throw new KeyNotFoundException($"No form found with ID {id}.");
 
             // מוודאים שה-ID של ה־DTO תואם לזה שב־URL
-            var entityToUpdate = mapper.Map<Form>(item);
+            var entityToUpdate = mapper.Map<FormDto,Form>(item);
             entityToUpdate.Id = id;
 
             var updated = Repositery.UpdateItem(id, entityToUpdate);

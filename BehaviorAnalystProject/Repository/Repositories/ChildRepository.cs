@@ -36,25 +36,32 @@ namespace Repository.Repositories
         public List<Child> GetAll()
         {
             return this.context.Child
-                       .Include(c => c.ChildComments)
-                       .Include(c => c.ChildForms)
+                       .Include("ChildComments")
+                       .Include("ChildForms")
+                       .Include("ChildLessonsSumery")
                        .ToList();
         }
 
         public Child GetById(int id)
         {
-            return context.Child.Include("ChildComments").Include("ChildForms").FirstOrDefault(x => x.Code == id);
+            return context.Child.Include("ChildComments").Include("ChildForms").Include("ChildLessonsSumery").FirstOrDefault(x => x.Code == id);
         }
 
         public List<Comment> GetChildComments(int id)
         {
-           var child = GetById(id);
+            var child = GetById(id);
             if (child == null)
-             
-            throw new ArgumentException($"Child with code {id} does not exist.");
+                throw new ArgumentException($"Child with code {id} does not exist.");
             return child.ChildComments.ToList() ?? new List<Comment>();
         }
 
+        public List<LessonSummary> GetChildLessonSummery(int id)
+        {
+            var child = GetById(id);
+            if (child == null)
+                throw new ArgumentException($"Child with code {id} does not exist.");
+            return child.ChildLessonsSumery.ToList() ?? new List<LessonSummary>();
+        }
         public List<Form> GetChildForms(int id)
         {
             var child = GetById(id);
@@ -79,7 +86,6 @@ namespace Repository.Repositories
             child.Gender = item.Gender;
             child.LessonNumber = item.LessonNumber;
             child.ChildsDisability = item.ChildsDisability;
-            // לא נעדכן את הקומנטים כאן כדי לא ליצור בעיות
 
             context.Save();
             return child;
