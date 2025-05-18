@@ -6,7 +6,7 @@ using AutoMapper;
 
 namespace Service.Services
 {
-    internal class MyMapper
+    public class MyMapper : Profile
     {
         string path = Path.Combine(Environment.CurrentDirectory, "Forms/");
         private readonly IMapper _mapper;
@@ -25,19 +25,16 @@ namespace Service.Services
                 // analyst
                 cfg.CreateMap<AnalystDto, Analyst>().ReverseMap();
 
+                // comment
+                cfg.CreateMap<Comment, CommentDto>().ReverseMap();
+
                 // child
-                // cfg.CreateMap<Child, ChildDto>().ReverseMap();
-
-
-                // מ-Entity ל-DTO
                 cfg.CreateMap<Child, ChildDto>()
                     .ForMember(dest => dest.AnalystId, opt => opt.MapFrom(src => src.AnalystCode));
 
-                // מ-DTO ל-Entity
                 cfg.CreateMap<ChildDto, Child>()
                     .ForMember(dest => dest.AnalystCode, opt => opt.MapFrom(src => src.AnalystId))
                     .ForMember(dest => dest.Analyst, opt => opt.Ignore()); // חשוב! לא לגעת ב-Analyst עצמו
-
             });
 
             // יצירת Mapper מתוך הקונפיגורציה

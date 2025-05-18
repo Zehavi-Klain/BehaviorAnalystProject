@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Dto;
 
-
-namespace Service.Interfaces
+public interface IService<T>
 {
-    public interface IService<T>
-    {
-        T GetById(int id);
-        List<T> GetAll();
-        void Delete(int id);
-        T AddItem(T item);
-        void UpdateItem(int id, T item);
+    T GetById(int id);
+    List<T> GetAll();
+    void Delete(int id);
+    T AddItem(T item);
+    T UpdateItem(int id, T item);
 
+    // פונקציה אופציונלית עם מימוש ברירת מחדל
+    List<CommentDto> GetChildComments(int id)
+    {
+        throw new NotImplementedException("GetChildComments לא מומשה");
+    }
+
+    List<FormDto> GetChildForms(int id)
+    {
+        throw new NotImplementedException("GetChildForms לא מומשה");
     }
 }
-

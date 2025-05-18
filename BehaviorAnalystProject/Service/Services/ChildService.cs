@@ -2,20 +2,18 @@
 using Common.Dto;
 using Repository.Entities;
 using Repository.Interfaces;
-using Service.Interfaces;
 using Service.Services;
 using System.Net.Mail;
 
 public class ChildService : IService<ChildDto>
 {
     private readonly IRepository<Child> Repositery;
-    private readonly IMapper mapper;
+   // private readonly IMapper mapper;
     private readonly MyMapper _mapper = new MyMapper();
 
     public ChildService(IRepository<Child> repositery, IMapper mapper)
     {
         Repositery = repositery;
-        this.mapper = mapper;
     }
 
     public ChildDto AddItem(ChildDto item)
@@ -68,7 +66,7 @@ public class ChildService : IService<ChildDto>
         return _mapper.Map<Child, ChildDto>(child);
     }
 
-    public void UpdateItem(int id, ChildDto item)
+    public ChildDto UpdateItem(int id, ChildDto item)
     {
         try
         {
@@ -91,6 +89,25 @@ public class ChildService : IService<ChildDto>
         {
             throw new Exception($"שגיאה בלתי צפויה: {ex.Message}");
         }
+        return item;
+    }
+    public List<CommentDto> GetChildComments(int id)
+    {
+        var child = Repositery.GetById(id);
+        if (child == null)
+            throw new ArgumentException($"Child with code {id} does not exist.");
+
+        var commentEntities = child.ChildComments ?? new List<Comment>();
+        var comments = _mapper.Map<List<Comment>, List<CommentDto>>(commentEntities.ToList());
+        return comments;
+    }
+
+    public List<FormDto> GetChildForms(int id)
+    {
+        var child = Repositery.GetById(id);
+        if (child == null)
+            throw new ArgumentException($"Child with code {id} does not exist.");
+        return _mapper.Map<List<Form>, List<FormDto>>(child.ChildForms.ToList());
     }
 
     // ---------- בדיקות תקינות ----------

@@ -39,8 +39,22 @@ namespace Repository.Repositories
         {
             return this.context.Child.FirstOrDefault(x => x.Code==id);
         }
+        public List<Comment> GetChildComments(int id)
+        {
+            var child = GetById(id);
+            if (child == null)
+                throw new ArgumentException($"Child with code {id} does not exist.");
+            return child.ChildComments.ToList();
+        }
+        public List<Form> GetChildForms(int id)
+        {
+            var child = GetById(id);
+            if (child == null)
+                throw new ArgumentException($"Child with code {id} does not exist.");
+            return child.ChildForms.ToList();
+        }
 
-        public void UpdateItem(int id, Child item)
+        public Child UpdateItem(int id, Child item)
         {
             var child = GetById(id);
             child.Email = item.Email;
@@ -49,7 +63,9 @@ namespace Repository.Repositories
             child.FamilyPosition = item.FamilyPosition;
             child.Fname = item.Fname;
             child.Lname = item.Lname;
+            child.ChildComments = item.ChildComments;
             context.Save();
+            return child;
         }
     }
 }

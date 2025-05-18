@@ -1,6 +1,5 @@
 ﻿using Common.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -11,10 +10,10 @@ namespace BehaviorAnalystProject.Controllers
     public class ChildController : ControllerBase
     {
         private readonly IService<ChildDto> service;
-
         public ChildController(IService<ChildDto> service)
         {
             this.service = service;
+
         }
 
         // GET: api/<ChildController>
@@ -101,5 +100,21 @@ namespace BehaviorAnalystProject.Controllers
                 return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
             }
         }
+        [HttpGet("{id}/comments")]
+        public ActionResult<List<CommentDto>> GetChildComments(int id)
+        {
+            try
+            {
+                var comments = service.GetChildComments(id);
+                if (comments == null || comments.Count == 0)
+                    return NotFound("לא נמצאו תגובות לילד זה");
+                return Ok(comments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
+        }
+        
     }
 }

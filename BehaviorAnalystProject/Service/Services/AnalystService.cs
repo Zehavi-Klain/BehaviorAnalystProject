@@ -1,5 +1,4 @@
-﻿using Service.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Dto;
@@ -64,7 +63,7 @@ namespace Service.Services
             return _mapper.Map<Analyst, AnalystDto>(entity);
         }
 
-        public void UpdateItem(int id, AnalystDto item)
+        public AnalystDto UpdateItem(int id, AnalystDto item)
         {
             if (id <= 0)
                 throw new ArgumentException("Invalid ID.");
@@ -75,7 +74,8 @@ namespace Service.Services
             if (existing == null)
                 throw new KeyNotFoundException($"No analyst found with ID {id}.");
 
-            Repositery.UpdateItem(id, _mapper.Map<AnalystDto, Analyst>(item));
+            var updatedEntity = Repositery.UpdateItem(id, _mapper.Map<AnalystDto, Analyst>(item));
+            return _mapper.Map<Analyst, AnalystDto>(updatedEntity);
         }
 
         // ---------- בדיקות תקינות ----------

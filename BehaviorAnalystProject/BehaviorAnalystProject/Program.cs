@@ -1,5 +1,4 @@
 using Common.Dto;
-using Service.Interfaces;
 using Repository.Interfaces;
 using Repository.Entities;
 using Repository.Repositories;
@@ -24,6 +23,13 @@ builder.Services.AddScoped<IService<AnalystDto>, AnalystService>();
 builder.Services.AddScoped<IRepository<Analyst>, AnalystRepository>(); // נוספה שורה זו
 builder.Services.AddScoped<IService<ChildDto>, ChildService>();  // רישום של השירות עם המימוש
 builder.Services.AddScoped<IRepository<Child>, ChildRepository>();
+builder.Services.AddScoped<IRepository<FormCategory>, FormCategoryRepository>();
+builder.Services.AddScoped<FormCategoryService>();
+builder.Services.AddScoped<IService<CommentDto>, CommentService>();
+builder.Services.AddScoped<IRepository<Comment>, CommentRepository>();
+
+
+
 //builder.Services.AddSingleton<Mapper>();
 
 
