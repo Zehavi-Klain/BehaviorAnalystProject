@@ -40,13 +40,14 @@ namespace Repository.Repositories
             return this.context.Analyst.FirstOrDefault(x => x.Code==id);
         }
 
-        public void UpdateItem(int id, Analyst item)
+        public Analyst UpdateItem(int id, Analyst item)
         {
             var analyst = GetById(id);
             analyst.Email = item.Email;
             analyst.Fname = item.Fname;
             analyst.Lname = item.Lname;
             context.Save();
+            return analyst;
         }
     }
 }

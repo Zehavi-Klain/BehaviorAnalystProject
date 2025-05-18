@@ -1,9 +1,7 @@
 ﻿using Common.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
-using Service.Interfaces;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Service.Services;
 
 namespace BehaviorAnalystProject.Controllers
 {
@@ -11,41 +9,101 @@ namespace BehaviorAnalystProject.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IService<Comment> service;
-        public CommentController(IService<Comment> service)
+        private readonly IService<CommentDto> service;
+
+        public CommentController(IService<CommentDto> service)
         {
             this.service = service;
         }
-        // GET: api/<CommentController>
+
+        // GET: api/Comment
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<CommentDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var comments = service.GetAll();
+            return Ok(comments);
         }
 
-        // GET api/<CommentController>/5
+        // GET: api/Comment/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<CommentDto> Get(int id)
         {
-            return "value";
+            try
+            {
+                var comment = service.GetById(id);
+                return Ok(comment);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // POST api/<CommentController>
+        // POST: api/Comment
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<CommentDto> Post([FromBody] CommentDto comment)
         {
+            try
+            {
+                var added = service.AddItem(comment);
+                return CreatedAtAction(nameof(Get), new { id = added.ID }, added);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Missing data: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Invalid data: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // שגיאה כללית לא צפויה
+                return StatusCode(500, $"Unexpected error: {ex.Message}");
+            }
         }
 
-        // PUT api/<CommentController>/5
+
+        // PUT: api/Comment/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<Comment> Put(int id, [FromBody] CommentDto comment)
         {
+            if (id != comment.ID)
+                return BadRequest("ID in URL does not match ID in body.");
+
+            try
+            {
+                var updated = service.UpdateItem(id,comment);
+                return Ok(updated);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // DELETE api/<CommentController>/5
+        // DELETE: api/Comment/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                var comment = service.GetById(id);
+                service.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

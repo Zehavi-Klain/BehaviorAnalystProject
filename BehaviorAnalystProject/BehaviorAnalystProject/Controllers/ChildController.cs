@@ -1,8 +1,7 @@
 ﻿using Common.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Service.Interfaces;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System;
+using System.Collections.Generic;
 
 namespace BehaviorAnalystProject.Controllers
 {
@@ -11,45 +10,111 @@ namespace BehaviorAnalystProject.Controllers
     public class ChildController : ControllerBase
     {
         private readonly IService<ChildDto> service;
-
         public ChildController(IService<ChildDto> service)
         {
             this.service = service;
+
         }
 
         // GET: api/<ChildController>
         [HttpGet]
-        public List<ChildDto> Get()
+        public ActionResult<List<ChildDto>> Get()
         {
-            return service.GetAll();
+            try
+            {
+                var children = service.GetAll();
+                return Ok(children);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
         // GET api/<ChildController>/5
         [HttpGet("{id}")]
-        public ChildDto Get(int id)
+        public ActionResult<ChildDto> Get(int id)
         {
-            return service.GetById(id);
+            try
+            {
+                var child = service.GetById(id);
+                if (child == null)
+                    return NotFound("הילד לא נמצא");
+                return Ok(child);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
         // POST api/<ChildController>
         [HttpPost]
-        public void Post([FromBody] ChildDto child)
+        public ActionResult<ChildDto> Post([FromBody] ChildDto child)
         {
-            service.AddItem(child);
+            try
+            {
+                var createdChild = service.AddItem(child);
+                return CreatedAtAction(nameof(Get), new { id = createdChild.Code }, createdChild);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
         // PUT api/<ChildController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ChildDto child)
+        public ActionResult Put(int id, [FromBody] ChildDto child)
         {
-            service.UpdateItem(id, child);
+            try
+            {
+                service.UpdateItem(id, child);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
 
         // DELETE api/<ChildController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            service.Delete(id);
+            try
+            {
+                service.Delete(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
         }
+        [HttpGet("{id}/comments")]
+        public ActionResult<List<CommentDto>> GetChildComments(int id)
+        {
+            try
+            {
+                var comments = service.GetChildComments(id);
+                if (comments == null || comments.Count == 0)
+                    return NotFound("לא נמצאו תגובות לילד זה");
+                return Ok(comments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
+        }
+        
     }
 }

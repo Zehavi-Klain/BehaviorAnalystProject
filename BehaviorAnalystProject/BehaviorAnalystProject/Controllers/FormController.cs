@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BehaviorAnalystProject.Controllers
 {
@@ -8,36 +10,104 @@ namespace BehaviorAnalystProject.Controllers
     [ApiController]
     public class FormController : ControllerBase
     {
+        private readonly IService<FormDto> service;
+
+        public FormController(IService<FormDto> service)
+        {
+            this.service = service;
+        }
+
         // GET: api/<FormController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<FormDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var forms = service.GetAll();
+                return Ok(forms); // מחזיר את רשימת הטפסים
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
         }
 
         // GET api/<FormController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<FormDto> Get(int id)
         {
-            return "value";
+            try
+            {
+                var form = service.GetById(id);
+                if (form == null)
+                    return NotFound($"לא נמצא טופס עם מזהה {id}."); // אם הטופס לא נמצא
+                return Ok(form); // מחזיר את הטופס המבוקש
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
         }
 
         // POST api/<FormController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<FormDto> Post([FromBody] FormDto form)
         {
+            try
+            {
+                if (form == null)
+                    return BadRequest("הבקשה אינה מכילה נתונים."); // אם הטופס הוא null
+                var createdForm = service.AddItem(form);
+                return CreatedAtAction(nameof(Get), new { id = createdForm.Id }, createdForm); // מחזיר את הטופס שנוצר
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}"); // אם יש שגיאה בתוקף הנתונים
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
         }
 
         // PUT api/<FormController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, [FromBody] FormDto form)
         {
+            try
+            {
+                if (form == null)
+                    return BadRequest("הבקשה אינה מכילה נתונים.");
+                service.UpdateItem(id, form);
+                return NoContent(); // הצלחה ללא תוכן
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"שגיאה בנתונים: {ex.Message}"); // אם יש שגיאה בתוקף הנתונים
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
         }
 
         // DELETE api/<FormController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            try
+            {
+                service.Delete(id);
+                return NoContent(); // הצלחה ללא תוכן
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound($"לא נמצא טופס עם מזהה {id}."); // אם הטופס לא נמצא
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
         }
     }
 }

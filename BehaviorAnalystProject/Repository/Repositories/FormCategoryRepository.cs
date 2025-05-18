@@ -40,11 +40,12 @@ namespace Repository.Repositories
             return this.context.FormCategory.FirstOrDefault(x => x.Code == id);
         }
 
-        public void UpdateItem(int id, FormCategory item)
+        public FormCategory UpdateItem(int id, FormCategory item)
         {
             var category = GetById(id);
             category.CategoryName = item.CategoryName;
             context.Save();
+            return category;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Repository.Entities;
+using Service.Services;
+using System;
+using System.Collections.Generic;
 
 namespace BehaviorAnalystProject.Controllers
 {
@@ -8,36 +10,110 @@ namespace BehaviorAnalystProject.Controllers
     [ApiController]
     public class FormCategoryController : ControllerBase
     {
-        // GET: api/<FormCategoryController>
+        private readonly FormCategoryService service;
+
+        public FormCategoryController(FormCategoryService service)
+        {
+            this.service = service;
+        }
+
+        // GET: api/FormCategory
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<FormCategory>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var categories = service.GetAll();
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // GET api/<FormCategoryController>/5
+        // GET: api/FormCategory/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<FormCategory> Get(int id)
         {
-            return "value";
+            try
+            {
+                var category = service.GetById(id);
+                return Ok(category);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // POST api/<FormCategoryController>
+        // POST: api/FormCategory
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<FormCategory> Post([FromBody] FormCategory item)
         {
+            try
+            {
+                var added = service.AddItem(item);
+                return CreatedAtAction(nameof(Get), new { id = added.Code }, added);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // PUT api/<FormCategoryController>/5
+        // PUT: api/FormCategory/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] FormCategory item)
         {
+            try
+            {
+                service.UpdateItem(id, item);
+                return NoContent(); // 204
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // DELETE api/<FormCategoryController>/5
+        // DELETE: api/FormCategory/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                service.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

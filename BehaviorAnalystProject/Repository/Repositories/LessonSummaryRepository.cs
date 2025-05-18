@@ -40,11 +40,12 @@ namespace Repository.Repositories
             return this.context.LessonSummary.FirstOrDefault(x => x.ID == id);
         }
 
-        public void UpdateItem(int id, LessonSummary item)
+        public LessonSummary UpdateItem(int id, LessonSummary item)
         {
             var summary = GetById(id);
             summary.Text = item.Text;
             context.Save();
+            return summary;
         }
     }
 }
