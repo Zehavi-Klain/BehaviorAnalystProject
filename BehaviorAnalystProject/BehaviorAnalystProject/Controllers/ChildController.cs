@@ -1,120 +1,103 @@
-﻿using Common.Dto;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Common.Dto;
+using Service.Services;
 
-namespace BehaviorAnalystProject.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class ChildController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ChildController : ControllerBase
+    private readonly IService<ChildDto> _childService;
+
+    public ChildController(IService<ChildDto> childService)
     {
-        private readonly IService<ChildDto> service;
-        public ChildController(IService<ChildDto> service)
-        {
-            this.service = service;
+        _childService = childService;
+    }
 
-        }
+    [HttpGet]
+    public ActionResult<List<ChildDto>> GetAll()
+    {
+        return Ok(_childService.GetAll());
+    }
 
-        // GET: api/<ChildController>
-        [HttpGet]
-        public ActionResult<List<ChildDto>> Get()
+    [HttpGet("{id}")]
+    public ActionResult<ChildDto> GetById(int id)
+    {
+        try
         {
-            try
-            {
-                var children = service.GetAll();
-                return Ok(children);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            return Ok(_childService.GetById(id));
         }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 
-        // GET api/<ChildController>/5
-        [HttpGet("{id}")]
-        public ActionResult<ChildDto> Get(int id)
+    [HttpPost]
+    public ActionResult<ChildDto> Add([FromBody] ChildDto item)
+    {
+        try
         {
-            try
-            {
-                var child = service.GetById(id);
-                if (child == null)
-                    return NotFound("הילד לא נמצא");
-                return Ok(child);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            var added = _childService.AddItem(item);
+            return CreatedAtAction(nameof(GetById), new { id = added.Id }, added);
         }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-        // POST api/<ChildController>
-        [HttpPost]
-        public ActionResult<ChildDto> Post([FromBody] ChildDto child)
+    [HttpPut("{id}")]
+    public ActionResult<ChildDto> Update(int id, [FromBody] ChildDto item)
+    {
+        try
         {
-            try
-            {
-                var createdChild = service.AddItem(child);
-                return CreatedAtAction(nameof(Get), new { id = createdChild.Code }, createdChild);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest($"שגיאה בנתונים: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            return Ok(_childService.UpdateItem(id, item));
         }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-        // PUT api/<ChildController>/5
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] ChildDto child)
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        try
         {
-            try
-            {
-                service.UpdateItem(id, child);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest($"שגיאה בנתונים: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            _childService.Delete(id);
+            return NoContent();
         }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 
-        // DELETE api/<ChildController>/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+    [HttpGet("{id}/comments")]
+    public ActionResult<List<CommentDto>> GetComments(int id)
+    {
+        try
         {
-            try
-            {
-                service.Delete(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            var comments = _childService.GetChildComments(id);
+            return Ok(comments);
         }
-        [HttpGet("{id}/comments")]
-        public ActionResult<List<CommentDto>> GetChildComments(int id)
+        catch (Exception ex)
         {
-            try
-            {
-                var comments = service.GetChildComments(id);
-                if (comments == null || comments.Count == 0)
-                    return NotFound("לא נמצאו תגובות לילד זה");
-                return Ok(comments);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
-            }
+            return BadRequest(ex.Message);
         }
-        
+    }
+
+    [HttpGet("{id}/forms")]
+    public ActionResult<List<FormDto>> GetForms(int id)
+    {
+        try
+        {
+            var forms = _childService.GetChildForms(id);
+            return Ok(forms);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

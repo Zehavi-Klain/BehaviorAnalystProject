@@ -13,12 +13,13 @@ namespace Service.Services
         private readonly IRepository<Comment> repository;
        // private readonly IMapper mapper;
         private readonly IRepository<Child> childRepository;
-        private readonly MyMapper mapper = new MyMapper();
+        private readonly IMapper mapper;
 
         public CommentService(IRepository<Comment> repository, IRepository<Child> childRepository, IMapper mapper)
         {
             this.repository = repository;
             this.childRepository = childRepository;
+            this.mapper = mapper;
         }
         public CommentDto AddItem(CommentDto dto)
         {
@@ -69,11 +70,12 @@ namespace Service.Services
                 throw new KeyNotFoundException($"No comment found with ID {id}.");
 
             var entity = mapper.Map<CommentDto, Comment>(dto);
-            entity.ID = id; // נוודא שה-ID של הישות תואם למה שבא מה-URL
+            entity.ID = id;
 
             var updated = repository.UpdateItem(id, entity);
-            return mapper.Map<Comment,CommentDto>(updated);
+            return mapper.Map<Comment, CommentDto>(updated);
         }
+
 
 
     }

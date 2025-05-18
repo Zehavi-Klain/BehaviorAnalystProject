@@ -13,7 +13,6 @@ namespace Service.Services
     {
         private readonly IRepository<Analyst> Repositery;
         private readonly IMapper mapper;
-        private readonly MyMapper _mapper = new MyMapper();
 
         public AnalystService(IRepository<Analyst> repositery, IMapper mapper)
         {
@@ -29,9 +28,9 @@ namespace Service.Services
             if (existing != null)
                 throw new InvalidOperationException("An analyst with the same ID already exists.");
 
-            Analyst entity = _mapper.Map<AnalystDto, Analyst>(item);
+            Analyst entity = mapper.Map<AnalystDto, Analyst>(item);
             Analyst added = Repositery.AddItem(entity);
-            return _mapper.Map<Analyst, AnalystDto>(added);
+            return mapper.Map<Analyst, AnalystDto>(added);
         }
 
         public void Delete(int id)
@@ -48,7 +47,7 @@ namespace Service.Services
 
         public List<AnalystDto> GetAll()
         {
-            return _mapper.Map<List<Analyst>, List<AnalystDto>>(Repositery.GetAll());
+            return mapper.Map<List<Analyst>, List<AnalystDto>>(Repositery.GetAll());
         }
 
         public AnalystDto GetById(int id)
@@ -60,7 +59,7 @@ namespace Service.Services
             if (entity == null)
                 throw new KeyNotFoundException($"No analyst found with ID {id}.");
 
-            return _mapper.Map<Analyst, AnalystDto>(entity);
+            return mapper.Map<Analyst, AnalystDto>(entity);
         }
 
         public AnalystDto UpdateItem(int id, AnalystDto item)
@@ -74,8 +73,8 @@ namespace Service.Services
             if (existing == null)
                 throw new KeyNotFoundException($"No analyst found with ID {id}.");
 
-            var updatedEntity = Repositery.UpdateItem(id, _mapper.Map<AnalystDto, Analyst>(item));
-            return _mapper.Map<Analyst, AnalystDto>(updatedEntity);
+            var updatedEntity = Repositery.UpdateItem(id, mapper.Map<AnalystDto, Analyst>(item));
+            return mapper.Map<Analyst, AnalystDto>(updatedEntity);
         }
 
         // ---------- בדיקות תקינות ----------

@@ -31,6 +31,7 @@ builder.Services.AddScoped<IService<FormDto>, FormService>();
 builder.Services.AddScoped<IRepository<Form>, FormRepository>();
 
 
+builder.Services.AddAutoMapper(typeof(MyMapper));
 
 
 //builder.Services.AddSingleton<Mapper>();
