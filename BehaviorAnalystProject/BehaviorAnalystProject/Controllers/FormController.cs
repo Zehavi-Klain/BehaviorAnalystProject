@@ -51,22 +51,29 @@ namespace BehaviorAnalystProject.Controllers
 
         // POST api/<FormController>
         [HttpPost]
-        public ActionResult<FormDto> Post([FromBody] FormDto form)
+        public ActionResult<FormDto> Post([FromForm] FormDto form)
         {
             try
             {
                 if (form == null)
-                    return BadRequest("הבקשה אינה מכילה נתונים."); // אם הטופס הוא null
+                    return BadRequest("הבקשה אינה מכילה נתונים.");
+
+                if (form.FormFile != null)
+                {
+                    var fileName = UploadFile(form.FormFile);
+                    form.FileName = fileName; 
+                }
+
                 var createdForm = service.AddItem(form);
-                return CreatedAtAction(nameof(Get), new { id = createdForm.Id }, createdForm); // מחזיר את הטופס שנוצר
+                return CreatedAtAction(nameof(Get), new { id = createdForm.Id }, createdForm);
             }
             catch (ArgumentException ex)
             {
-                return BadRequest($"שגיאה בנתונים: {ex.Message}"); // אם יש שגיאה בתוקף הנתונים
+                return BadRequest($"שגיאה בנתונים: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
             }
         }
 
@@ -108,6 +115,24 @@ namespace BehaviorAnalystProject.Controllers
             {
                 return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
             }
+        }
+        private string UploadFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                throw new ArgumentException("קובץ לא תקין.");
+
+            var uploadsFolder = Path.Combine(Environment.CurrentDirectory, "Forms");
+            Directory.CreateDirectory(uploadsFolder); // מוודא שהתיקייה קיימת
+
+            var fileName = Path.GetFileName(file.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return fileName; // אפשר לשמור את השם במסד הנתונים אם רוצים
         }
     }
 }

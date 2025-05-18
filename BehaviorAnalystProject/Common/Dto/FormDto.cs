@@ -13,10 +13,10 @@ namespace Common.Dto
 {
     public class FormDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string CategoryName { get; set; }
-        public byte[] ArrFile { get; set; }
-        public IFormFile? fileImage { get; set; }
+        public byte[]? ArrFile { get; set; }
+        public IFormFile? FormFile { get; set; }
         public string FileName { get; set; }
         // Foreign Key for FormCategory
         public int? ChildID { get; set; }
