@@ -24,14 +24,10 @@ namespace Common.Dto
         public string ChildsDisability { get; set; }//לקות הילד
         public string FamilyPosition { get; set; }//מיקום במשפחה
         public string EducationalInstitution { get; set; }//מוסד לימודים
-        public virtual ICollection<FormDto>? ChildForms { get; set; }
-        public virtual ICollection<LessonSummary>? ChildLessonsSumery { get; set; }
-        public virtual ICollection<Comment>? ChildComments { get; set; }
 
+        public virtual List<CommentDto>? ChildComments { get; set; } = null;
         // Foreign Key for Analyst
 
         public int AnalystId { get; set; }
-        [ForeignKey("AnalystId")]
-        public Analyst Analyst { get; set; }
     }
 }

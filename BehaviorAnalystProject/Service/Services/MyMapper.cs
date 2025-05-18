@@ -6,37 +6,34 @@ using AutoMapper;
 
 namespace Service.Services
 {
-    internal class MyMapper
+    public class MyMapper : Profile
     {
         string path = Path.Combine(Environment.CurrentDirectory, "Forms/");
         private readonly IMapper _mapper;
 
         public MyMapper()
         {
-            // יצירת קונפיגורציה של AutoMapper
-            var config = new MapperConfiguration(cfg =>
-            {
-                // form
-                cfg.CreateMap<Form, FormDto>()
-                    .ForMember(dest => dest.ArrFile, opt => opt.MapFrom(src => File.ReadAllBytes(path + src.FileUrl)));
-                cfg.CreateMap<FormDto, Form>()
-                    .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(src => src.fileImage.FileName));
 
-                // analyst
-                cfg.CreateMap<AnalystDto, Analyst>().ReverseMap();
+            // form
+            CreateMap<Form, FormDto>()
+                .ForMember(dest => dest.ArrFile, opt => opt.MapFrom(src => File.ReadAllBytes(path + src.FileUrl)));
+            CreateMap<FormDto, Form>()
+                .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(src => src.fileImage.FileName));
 
-                // child
-                cfg.CreateMap<Child, ChildDto>().ReverseMap();
-            });
+            // analyst
+            CreateMap<AnalystDto, Analyst>().ReverseMap();
 
-            // יצירת Mapper מתוך הקונפיגורציה
-            _mapper = config.CreateMapper();
+            // comment
+            CreateMap<Comment, CommentDto>().ReverseMap();
+
+            // child
+            CreateMap<Child, ChildDto>()
+                .ForMember(dest => dest.AnalystId, opt => opt.MapFrom(src => src.AnalystCode));
+
+            CreateMap<ChildDto, Child>()
+                .ForMember(dest => dest.AnalystCode, opt => opt.MapFrom(src => src.AnalystId))
+                .ForMember(dest => dest.Analyst, opt => opt.Ignore()); // חשוב! לא לגעת ב-Analyst עצמו
         }
 
-        // דוגמה לשימוש ב-Mapper
-        public TDestination Map<TSource, TDestination>(TSource source)
-        {
-            return _mapper.Map<TSource, TDestination>(source);
-        }
     }
 }

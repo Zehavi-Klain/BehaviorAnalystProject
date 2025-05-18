@@ -40,13 +40,14 @@ namespace Repository.Repositories
             return this.context.Form.FirstOrDefault(x => x.Id == id);
         }
 
-        public void UpdateItem(int id, Form item)
+        public Form UpdateItem(int id, Form item)
         {
             var form = GetById(id);
             form.FileName = item.FileName;
             form.FormCategory = item.FormCategory;
             form.FileUrl = item.FileUrl;
             context.Save();
+            return form;
         }
     }
 }
