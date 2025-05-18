@@ -25,6 +25,7 @@ namespace Common.Dto
         public string FamilyPosition { get; set; }//מיקום במשפחה
         public string EducationalInstitution { get; set; }//מוסד לימודים
 
+        public virtual List<CommentDto>? ChildComments { get; set; } = null;
         // Foreign Key for Analyst
 
         public int AnalystId { get; set; }

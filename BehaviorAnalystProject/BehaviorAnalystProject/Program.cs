@@ -27,7 +27,7 @@ builder.Services.AddScoped<IRepository<FormCategory>, FormCategoryRepository>();
 builder.Services.AddScoped<FormCategoryService>();
 builder.Services.AddScoped<IService<CommentDto>, CommentService>();
 builder.Services.AddScoped<IRepository<Comment>, CommentRepository>();
-
+builder.Services.AddAutoMapper(typeof(MyMapper));
 
 
 //builder.Services.AddSingleton<Mapper>();

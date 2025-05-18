@@ -8,12 +8,12 @@ using System.Net.Mail;
 public class ChildService : IService<ChildDto>
 {
     private readonly IRepository<Child> Repositery;
-   // private readonly IMapper mapper;
-    private readonly MyMapper _mapper = new MyMapper();
+    private readonly IMapper _mapper;
 
     public ChildService(IRepository<Child> repositery, IMapper mapper)
     {
         Repositery = repositery;
+        _mapper = mapper;
     }
 
     public ChildDto AddItem(ChildDto item)
