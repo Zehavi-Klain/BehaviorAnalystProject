@@ -25,3 +25,7 @@ Migrations/
 # סודות וקבצים פרטיים
 secrets.json
 appsettings.Development.json
+
+*.pdf
+
+

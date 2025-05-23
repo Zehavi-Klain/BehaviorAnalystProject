@@ -15,15 +15,15 @@ namespace Repository.Entities
         public string FileName { get; set; }
 
         // Foreign Key for FormCategory
-        public string? ChildID { get; set; }
-        [ForeignKey("ChildID")]
+        public int? ChildCode { get; set; }
+        [ForeignKey("ChildCode")]
         public Child Child { get; set; }
-        public string? AnalystID { get; set; }
-        [ForeignKey("AnalystID")]
+        public int? AnalystCode { get; set; }
+        [ForeignKey("AnalystCode")]
         public Analyst Analyst { get; set; }
 
-        public int FormCategoryId { get; set; }
-        [ForeignKey("FormCategoryId")]
+        public int FormCategoryCode { get; set; }
+        [ForeignKey("FormCategoryCode")]
         public FormCategory FormCategory { get; set; }
     }
 }

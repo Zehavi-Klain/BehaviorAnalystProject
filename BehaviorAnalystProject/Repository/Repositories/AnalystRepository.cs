@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Repository.Repositories
     public class AnalystRepository : IRepository<Analyst>
     {
         private readonly IContext context;
-        public AnalystRepository(IContext context) 
+        public AnalystRepository(IContext context)
         {
             this.context = context;
         }
@@ -31,22 +32,26 @@ namespace Repository.Repositories
 
         public List<Analyst> GetAll()
         {
-           return this.context.Analyst.ToList();
-            
+            return this.context.Analyst
+                .Include("Children")
+                .Include("Forms")
+                .ToList();
+
         }
 
         public Analyst GetById(int id)
         {
-            return this.context.Analyst.FirstOrDefault(x => x.Id.Equals(id));
+            return this.context.Analyst.FirstOrDefault(x => x.Code==id);
         }
 
-        public void UpdateItem(int id, Analyst item)
+        public Analyst UpdateItem(int id, Analyst item)
         {
             var analyst = GetById(id);
             analyst.Email = item.Email;
             analyst.Fname = item.Fname;
             analyst.Lname = item.Lname;
             context.Save();
+            return analyst;
         }
     }
 }

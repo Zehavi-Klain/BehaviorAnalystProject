@@ -15,7 +15,7 @@ namespace Repository.Entities
         public string Text { get; set; }
 
         // קשר עם ילד (סיכום שיעור שייך לילד מסוים)
-        public string ChildId { get; set; }
+        public int ChildId { get; set; }
         [ForeignKey("ChildId")]
         public Child child { get; set; }
     }

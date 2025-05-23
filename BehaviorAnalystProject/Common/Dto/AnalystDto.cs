@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Entities
+namespace Common.Dto
 {
-    public class Analyst
+    public class AnalystDto
     {
         [Key]
         public int Code { get; set; }
@@ -15,7 +16,5 @@ namespace Repository.Entities
         public string Fname { get; set; }
         public string Lname { get; set; }
         public string Email { get; set; }
-        public virtual ICollection<Child>? Children { get; set; }
-        public virtual ICollection<Form>? Forms { get; set; }
     }
 }
