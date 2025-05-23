@@ -40,11 +40,19 @@ namespace Repository.Repositories
             return this.context.LessonSummary.FirstOrDefault(x => x.ID == id);
         }
 
-        public void UpdateItem(int id, LessonSummary item)
+        public LessonSummary UpdateItem(int id, LessonSummary item)
         {
-            var summary = GetById(id);
-            summary.Text = item.Text;
+            var existing = GetById(id);
+            if (existing == null)
+                throw new KeyNotFoundException($"No lesson summary found with ID {id}.");
+
+            existing.Date = item.Date;
+            existing.Text = item.Text;
+            existing.ChildId = item.ChildId;
+
             context.Save();
+            return existing;
         }
+
     }
 }

@@ -40,12 +40,20 @@ namespace Repository.Repositories
                 return this.context.Comment.FirstOrDefault(x => x.ID==id);
             }
 
-            public void UpdateItem(int id, Comment item)
-            {
-                var comment = GetById(id);
-                comment.AccessPermission = item.AccessPermission;
-                comment.Comments= item.Comments;
-                context.Save();
-            }
+        public Comment UpdateItem(int id, Comment item)
+        {
+            var comment = GetById(id);
+            if (comment == null)
+                throw new KeyNotFoundException($"No comment found with ID {id}.");
+
+            comment.AccessPermission = item.AccessPermission;
+            comment.Comments = item.Comments;
+
+            // Save the changes to the database
+            context.Save();
+
+            // מחזירים את האובייקט המעודכן
+            return comment;
         }
+    }
 }

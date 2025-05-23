@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Entities
+namespace Common.Dto
 {
-    public class Child
+    public class ChildDto
     {
         [Key]
         public int Code { get; set; }
@@ -24,15 +24,10 @@ namespace Repository.Entities
         public string ChildsDisability { get; set; }//לקות הילד
         public string FamilyPosition { get; set; }//מיקום במשפחה
         public string EducationalInstitution { get; set; }//מוסד לימודים
-        public bool IsActive { get; set; } = true;//האם משתמש פעיל או לא
-        public virtual ICollection<Form>? ChildForms { get; set; } 
-        public virtual ICollection<LessonSummary>? ChildLessonsSumery { get; set; } 
-        public virtual ICollection<Comment>? ChildComments { get; set; } 
 
+        public virtual List<CommentDto>? ChildComments { get; set; } = null;
         // Foreign Key for Analyst
-        
-        public int AnalystCode { get; set; }
-        [ForeignKey("AnalystCode")]
-        public Analyst Analyst { get; set; }
+
+        public int AnalystId { get; set; }
     }
 }
