@@ -49,6 +49,23 @@ namespace BehaviorAnalystProject.Controllers
             }
         }
 
+        [HttpGet("ByCategory/{categoryId}")]
+        public ActionResult<List<FormDto>> GetByFormCategoryId(int id,int categoryID)
+        {
+            try
+            {
+                var form = service.GetFormsByIdCategory(id, categoryID);
+                if (form == null)
+                    return NotFound($"לא נמצאו טפסים עם קטוגריה {id}."); // אם הטופס לא נמצא
+                return Ok(form); // מחזיר את הטופס המבוקש
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שגיאה בשרת: {ex.Message}"); // במקרה של שגיאה בלתי צפויה
+            }
+        }
+
+
         // POST api/<FormController>
         [HttpPost]
         public ActionResult<FormDto> Post([FromForm] FormDto form)
@@ -58,13 +75,8 @@ namespace BehaviorAnalystProject.Controllers
                 if (form == null)
                     return BadRequest("הבקשה אינה מכילה נתונים.");
 
-                if (form.FormFile != null)
-                {
-                    var fileName = UploadFile(form.FormFile);
-                    form.FileName = fileName; 
-                }
-
                 var createdForm = service.AddItem(form);
+
                 return CreatedAtAction(nameof(Get), new { id = createdForm.Id }, createdForm);
             }
             catch (ArgumentException ex)
@@ -76,7 +88,6 @@ namespace BehaviorAnalystProject.Controllers
                 return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
             }
         }
-
         // PUT api/<FormController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] FormDto form)

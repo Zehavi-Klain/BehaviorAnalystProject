@@ -76,6 +76,18 @@ namespace Service.Services
             var updatedEntity = Repositery.UpdateItem(id, mapper.Map<AnalystDto, Analyst>(item));
             return mapper.Map<Analyst, AnalystDto>(updatedEntity);
         }
+        public List<Form> GetFormsByIdCategory(int id, int categoryID)
+        {
+            var analyst = Repositery.GetById(id);
+            if (analyst == null)
+                throw new ArgumentException($"Child with code {id} does not exist.");
+            // סינון לפי קטגוריה
+            var formEntities = analyst.Forms
+                ?.Where(f => f.FormCategoryCode == categoryID)
+                ?.ToList() ?? new List<Form>();
+            return formEntities;
+        }
+
 
         // ---------- בדיקות תקינות ----------
 

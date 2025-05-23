@@ -1,5 +1,6 @@
 ﻿using Common.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Service.Services;
 using System;
 using System.Collections.Generic;
 
@@ -102,6 +103,19 @@ namespace BehaviorAnalystProject.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"שגיאה בשרת: {ex.Message}");
+            }
+        }
+        [HttpGet("by-category")]
+        public IActionResult GetFormsByCategory(int id, int categoryID)
+        {
+            try
+            {
+                var forms = service.GetFormsByIdCategory(id, categoryID);
+                return Ok(forms); // מחזיר 200 עם הרשימה
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { message = ex.Message }); // מחזיר 404 עם הודעה
             }
         }
     }

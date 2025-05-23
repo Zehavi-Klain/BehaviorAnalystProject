@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,11 @@ namespace Repository.Interfaces
         void Delete(int id);
         T AddItem(T item);
         T UpdateItem(int id,T item);
+        //List<Form> GetFormsByIdCategory(int id)
+        //{
+        //    throw new NotImplementedException("GetFormsByIdCategory  repository לא מומשה");
+        //}
+
 
     }
 }

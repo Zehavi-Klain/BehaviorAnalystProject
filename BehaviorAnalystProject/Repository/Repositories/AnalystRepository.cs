@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,10 @@ namespace Repository.Repositories
 
         public List<Analyst> GetAll()
         {
-            return this.context.Analyst.ToList();
+            return this.context.Analyst
+                .Include("Children")
+                .Include("Forms")
+                .ToList();
 
         }
 

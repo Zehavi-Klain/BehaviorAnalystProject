@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Repository.Entities;
 
 public interface IService<T>
 {
@@ -17,5 +18,9 @@ public interface IService<T>
     List<FormDto> GetChildForms(int id)
     {
         throw new NotImplementedException("GetChildForms לא מומשה");
+    }
+    List<FormCategory> GetFormsByIdCategory(int id,int CategoryID)
+    {
+        throw new NotImplementedException("GetFormsByIdCategory לא מומשה");
     }
 }

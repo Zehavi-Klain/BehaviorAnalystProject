@@ -39,6 +39,13 @@ namespace Repository.Repositories
         {
             return this.context.Form.FirstOrDefault(x => x.Id == id);
         }
+        public List<Form> GetFormsByIdCategory(int id)
+        {
+            return this.context.Form
+                .Where(x => x.FormCategoryCode == id)
+                .ToList();
+        }
+
 
         public Form UpdateItem(int id, Form item)
         {
